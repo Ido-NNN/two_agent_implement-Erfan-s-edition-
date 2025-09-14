@@ -1,0 +1,84 @@
+problem_solving_task:
+  description: >
+    You receive a finite element method (FEM) problem description: {problem_description}.
+    Your job is to manage the entire process of generating and executing a FEniCS-based Python solution.
+
+    First, you must delegate all coding work to the "Developer" coworker using the "Delegate work to coworker" tool. You must never write, modify, or fix Python code yourself — including syntax, logic, or FEM formulation corrections.
+
+    If you identify any issues in the Developer's code (e.g., syntax errors, incorrect FEM formulations, inappropriate boundary conditions, solver setup problems, or code style issues), you must delegate these back to the "Developer" coworker for correction. Never delegate any coding tasks to the Manager (yourself).
+
+    After receiving the Developer's code, review it thoroughly for FEM correctness. If necessary, use the "Ask question to coworker" tool or delegate fixes to the Developer.
+
+    **Once the solution is verified and complete, you MUST execute the final code using the "CodeInterpreterTool". Execution is mandatory.** 
+    This tool will run the code in a specialized FEniCS Docker environment ('my-fenics-image:latest') to generate the final result. 
+    You will pass the final, correct code string and a list of its library dependencies to this tool.
+
+    IMPORTANT FORMAT RULES FOR TOOLS:
+    - For "Delegate work to coworker":
+      * `task`, `context`, and `coworker` must be plain strings.
+      * Example:
+          task: "Fix the syntax error in the provided FEniCS Python code so it runs successfully."
+          context: "The code has a missing colon after the for loop definition."
+          coworker: "Developer"
+
+    - For "Ask question to coworker":
+      * `question` and `context` must be plain strings.
+      
+    - For "CodeInterpreterTool":
+       This tool takes the final, verified Python code and a list of required library installation names.
+       `code`: The complete and correct FEniCS Python code provided by the Developer.
+       `libraries_used`: A list of strings of the Python libraries needed to run the code. For FEniCS problems, this list MUST include 'fenics'.
+       Example:
+          code: |
+            from fenics import *
+            # ... (complete, verified FEniCS code) ...
+            print(f"Computed solution at point (0.5, 0.5): {u(0.5, 0.5)}")
+          libraries_used:
+            - fenics
+            - numpy
+
+  expected_output: >
+    The final reviewed FEniCS Python code and the results of the execution of the code(e.g. printed results, plots and etc).
+  agent: manager_agent
+  output_file: output/report.md
+
+
+code_development_task:
+  description: >
+    Based on the FEM problem description received from the Manager, plan an appropriate variational formulation and discretization.
+    Write Python code using the FEniCS library to solve the problem accurately.
+    
+    Your code will be executed inside a Docker container. Therefore, to ensure any generated files (plots, data, etc.) are accessible, you MUST save them to the `/workspace/` directory. For example, a command like `plt.savefig('my_plot.png')` must be written as `plt.savefig('/workspace/my_plot.png')`.
+
+    Pay close attention to boundary conditions, function spaces, solver settings, and numerical stability.
+    Incorporate feedback from the Manager and iteratively improve the code to ensure it is clean, correct, and executable.
+    
+    When using the "Ask question to coworker" tool:
+    - Always pass plain text strings for both `question` and `context`.
+    - Do not wrap them in dictionaries, objects, or include keys like "description" or "type".
+    - Example:
+      question: "Could you clarify which finite element function space to use for this elasticity problem?"
+      context: "I am implementing the FEniCS code for the FEM problem and need more details on the problem setup."
+  expected_output: >
+    **The final Python script code, ready for execution by the Manager. The script must be complete, correct, and save all its outputs to the '/workspace/' directory.**
+  agent: assistant_agent
+
+
+problem_execution_task:
+  description: >
+    You receive a complete, verified FEniCS Python solution code.
+    Your job is to execute this final code using the "CodeInterpreterTool" in a specialized FEniCS Docker environment ('my-fenics-image:latest'). 
+
+    Execution is mandatory. After running the code, capture all outputs (printed results, plots, files, etc.) and save them into the output file.
+
+    Do not attempt to write, debug, or modify the code yourself — only execute it as provided.
+
+    The tool requires:
+    - `code`: The complete FEniCS Python code.
+    - `libraries_used`: A list of Python libraries required to run the code. This list MUST include 'fenics'.
+
+  expected_output: >
+    The execution results of the provided FEniCS Python code (e.g., printed values, plots, data) saved in the output file.
+
+  agent: manager_agent
+  output_file: output/execution.md
