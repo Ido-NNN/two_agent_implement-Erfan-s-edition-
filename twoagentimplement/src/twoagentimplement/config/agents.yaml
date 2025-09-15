@@ -52,3 +52,5 @@ assistant_agent:
       context: "I am implementing the FEniCS code for the FEM problem and need more details on the problem setup."  
   llm: openai/gpt-4o-mini
 
+
+
