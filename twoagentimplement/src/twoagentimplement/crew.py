@@ -55,10 +55,9 @@ class PythonProblemSolverCrew:
         )
     
     @task
-    def problem_execution_taskk(self) -> Task:
+    def problem_execution_task(self) -> Task:
         return Task(
             config=self.tasks_config['problem_execution_task'],
-            output_file='output/execution.md'
         )
 
     @crew
@@ -73,7 +72,6 @@ class PythonProblemSolverCrew:
             # memory=True,
             verbose=True,
             output_log_file='my_crew_log.json',
-        
         )
 
     
@@ -83,4 +81,5 @@ class PythonProblemSolverCrew:
     
 
     
+
      
