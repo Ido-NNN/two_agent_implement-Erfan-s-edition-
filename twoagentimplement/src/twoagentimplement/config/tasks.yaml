@@ -5,6 +5,8 @@ problem_solving_task:
 
     First, you must delegate all coding work to the "Developer" coworker using the "Delegate work to coworker" tool. You must never write, modify, or fix Python code yourself — including syntax, logic, or FEM formulation corrections.
 
+    In addition check the code to become sure that the code saves the files in this directory :  `/workspace/output/` . For example, a command like `plt.savefig('my_plot.png')` must be written as `plt.savefig('/workspace/output/my_plot.png')`.
+
     If you identify any issues in the Developer's code (e.g., syntax errors, incorrect FEM formulations, inappropriate boundary conditions, solver setup problems, or code style issues), you must delegate these back to the "Developer" coworker for correction. Never delegate any coding tasks to the Manager (yourself).
 
     After receiving the Developer's code, review it thoroughly for FEM correctness. If necessary, use the "Ask question to coworker" tool or delegate fixes to the Developer.
@@ -48,7 +50,7 @@ code_development_task:
     Based on the FEM problem description received from the Manager, plan an appropriate variational formulation and discretization.
     Write Python code using the FEniCS library to solve the problem accurately.
     
-    Your code will be executed inside a Docker container. Therefore, to ensure any generated files (plots, data, etc.) are accessible, you MUST save them to the `/workspace/` directory. For example, a command like `plt.savefig('my_plot.png')` must be written as `plt.savefig('/workspace/my_plot.png')`.
+    Your code will be executed inside a Docker container. Therefore, to ensure any generated files (plots, data, etc.) are accessible, Do NOTICE that you MUST save the files to the `/workspace/output/` directory. For example, a command like `plt.savefig('my_plot.png')` must be written as `plt.savefig('/workspace/output/my_plot.png')`.
 
     Pay close attention to boundary conditions, function spaces, solver settings, and numerical stability.
     Incorporate feedback from the Manager and iteratively improve the code to ensure it is clean, correct, and executable.
@@ -60,7 +62,7 @@ code_development_task:
       question: "Could you clarify which finite element function space to use for this elasticity problem?"
       context: "I am implementing the FEniCS code for the FEM problem and need more details on the problem setup."
   expected_output: >
-    **The final Python script code, ready for execution by the Manager. The script must be complete, correct, and save all its outputs to the '/workspace/' directory.**
+    **The final Python script code, ready for execution by the Manager. The script must be complete, correct, and forced to save all its outputs to the '/workspace/output/' directory.**
   agent: assistant_agent
 
 
@@ -69,7 +71,7 @@ problem_execution_task:
     You receive a complete, verified FEniCS Python solution code.
     Your job is to execute this final code using the "CodeInterpreterTool" in a specialized FEniCS Docker environment ('my-fenics-image:latest'). 
 
-    Execution is mandatory. After running the code, capture all outputs (printed results, plots, files, etc.) and save them into the output file.
+    Execution is mandatory. After running the code, capture all outputs (printed results, plots, files, etc.) and save them into the '/workspace/output/' directory.
 
     Do not attempt to write, debug, or modify the code yourself — only execute it as provided.
 
@@ -78,7 +80,8 @@ problem_execution_task:
     - `libraries_used`: A list of Python libraries required to run the code. This list MUST include 'fenics'.
 
   expected_output: >
-    The execution results of the provided FEniCS Python code (e.g., printed values, plots, data) saved in the output file.
+    The execution results of the provided FEniCS Python code (e.g., printed values, plots, data) MUST be saved saved in the '/workspace/output/' directory .
 
   agent: manager_agent
-  output_file: output/execution.md
+
+
